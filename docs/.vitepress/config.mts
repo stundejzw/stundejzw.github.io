@@ -1,9 +1,10 @@
-import { defineConfig } from "vitepress";
+import {defineConfig} from "vitepress";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "志文的个人文档站",
-  description: "存放自己的一些文档、资料。",
+  title: "前端学习乐园",
+  description: "在这里发表一些自己学习前端的一些文档、资料。",
+  cleanUrls: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -22,5 +23,8 @@ export default defineConfig({
     ],
 
     socialLinks: [{ icon: "github", link: "https://github.com/stundejzw" }],
+    footer: {
+      copyright: '<a href="https://beian.miit.gov.cn/" target="_blank">备案号：京ICP备2023019458号-1</a>'
+    }
   },
 });
