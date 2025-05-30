@@ -12,26 +12,25 @@ export default defineConfig({
       { text: 'Examples', link: '/markdown-examples' }
     ],
 
-    sidebar: [
-      {
-        text: 'Examples',
-        items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
-        ]
-      }
-    ],
-
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-    ]
+    ],
+    outline: 'deep',
   },
+  cleanUrls: true,
+  srcExclude: [
+    '**/draft/*.md',
+  ],
   vite: {
     plugins: [
       AutoSidebar({
         path: '.',
         collapsed: false,
-        ignoreList: ['.obsidian', '.git', 'node_modules']
+        ignoreList: [
+            '.obsidian',
+            '.git',
+            'draft',
+        ],
       })
     ]
   }
