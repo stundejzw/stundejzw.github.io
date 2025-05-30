@@ -1,34 +1,52 @@
-name: Deploy to GitHub Pages
+name: Deploy VitePress site to Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
         with:
-          fetch-depth: 0
-      - uses: pnpm/action-setup@v2
+          version: 9
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          version: 7.26.3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
+          node-version: 20.9.0
           cache: pnpm
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
       - name: Install dependencies
         run: pnpm install
-
-      - name: Build the documentation
+      - name: Build with VitePress
         run: pnpm run docs:build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.PRIVATE_TOKEN_GITHUB }}
-          publish_dir: .vitepress/dist
-          ref: gh-pages
+          path: .vitepress/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
